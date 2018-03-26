@@ -472,9 +472,14 @@ func mergeConfigSrcs(cfg, userCfg *aws.Config, envCfg envConfig, sharedCfg share
 				},
 			)
 		} else if len(sharedCfg.Creds.AccessKeyID) > 0 {
-			cfg.Credentials = credentials.NewStaticCredentialsFromCreds(
-				sharedCfg.Creds,
-			)
+			if len(sharedCfg.Creds.SessionToken) > 0 {
+				cfg.Credentials = credentials.NewSharedCredentials("", envCfg.Profile)
+
+			} else {
+				cfg.Credentials = credentials.NewStaticCredentialsFromCreds(
+					sharedCfg.Creds,
+				)
+			}
 		} else {
 			// Fallback to default credentials provider, include mock errors
 			// for the credential chain so user can identify why credentials
