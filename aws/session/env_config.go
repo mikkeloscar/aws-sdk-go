@@ -79,6 +79,9 @@ type envConfig struct {
 	//	AWS_CONFIG_FILE=$HOME/my_shared_config
 	SharedConfigFile string
 
+	//      AWS_REFRESHABLE_CREDENTIALS_FILE=$HOME/my_refreshable_credentials
+	RefreshableCredentialsFile string
+
 	// Sets the path to a custom Credentials Authroity (CA) Bundle PEM file
 	// that the SDK will use instead of the system's root CA bundle.
 	// Only use this if you want to configure the SDK to use a custom set
@@ -139,6 +142,9 @@ var (
 	sharedConfigFileEnvKey = []string{
 		"AWS_CONFIG_FILE",
 	}
+	refreshableCredentialsFileEnvKey = []string{
+		"AWS_REFRESHABLE_CREDENTIALS_FILE",
+	}
 )
 
 // loadEnvConfig retrieves the SDK's environment configuration.
@@ -196,6 +202,8 @@ func envConfigLoad(enableSharedConfig bool) envConfig {
 
 	setFromEnvVal(&cfg.SharedCredentialsFile, sharedCredsFileEnvKey)
 	setFromEnvVal(&cfg.SharedConfigFile, sharedConfigFileEnvKey)
+
+	setFromEnvVal(&cfg.RefreshableCredentialsFile, refreshableCredentialsFileEnvKey)
 
 	if len(cfg.SharedCredentialsFile) == 0 {
 		cfg.SharedCredentialsFile = defaults.SharedCredentialsFilename()
